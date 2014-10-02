@@ -1,12 +1,12 @@
 package com.cundong.izhihu.task;
 
+import android.content.Context;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 public abstract class BaseGetNewsTask extends BaseDownloadTask {
 
-	public BaseGetNewsTask(ResponseListener listener) {
-		super(listener);
+	public BaseGetNewsTask(Context context, ResponseListener listener) {
+		super(context, listener);
 	}
 
 	protected boolean isRefreshSuccess = true;
@@ -16,15 +16,10 @@ public abstract class BaseGetNewsTask extends BaseDownloadTask {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-
-		//网络判断  
-//        if (!NetworkUtils.isNetworkAvailable(context)) {  
-//            cancel(true);  
-//            Toast.makeText(context, ToastMessage.NO_NET.value, Toast.LENGTH_SHORT).show();  
-//            showRefreshView();  
-//        } 
-        
-		mListener.onPreExecute();
+		
+		if (mListener != null) {
+			mListener.onPreExecute();
+		}
 	}
 
 	@Override
@@ -42,10 +37,12 @@ public abstract class BaseGetNewsTask extends BaseDownloadTask {
 			// content).executeOnExecutor(MyAsyncTask.THREAD_POOL_EXECUTOR);
 		}
 		
-		if (isRefreshSuccess) {
-			mListener.onPostExecute(content, isRefreshSuccess, isContentSame);
-		} else {
-			mListener.onFail(e);
+		if (mListener != null) {
+			if (isRefreshSuccess) {
+				mListener.onPostExecute(content, isRefreshSuccess, isContentSame);
+			} else {
+				mListener.onFail(e);
+			}
 		}
 	}
 

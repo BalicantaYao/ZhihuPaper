@@ -19,16 +19,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="8dp"
-    android:paddingRight="8dp" >
+    android:paddingRight="8dp" 
+    android:background="@color/main_bg"
+    >
 
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:divider="@drawable/listview_divider"
+        android:divider="@null"
         android:drawSelectorOnTop="false"
-        android:listSelector="@drawable/list_selector_holo_dark" />
+        android:listSelector="@android:color/transparent"
+        android:fastScrollEnabled="true"
+        android:focusable="true" 
+         />
 
     <ProgressBar
         android:id="@+id/progress"

@@ -10,66 +10,68 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.cundong.izhihu.http.HttpClientUtils;
+import com.cundong.izhihu.util.FileUtils;
 import com.cundong.izhihu.util.Logger;
-import com.cundong.izhihu.util.MD5Util;
 import com.cundong.izhihu.util.SDCardUtils;
 import com.cundong.izhihu.util.StreamUtils;
+import com.cundong.izhihu.util.ZhihuUtils;
 
+/**
+ * 类说明： 	新闻详情页，WebView中图片列表下载Task
+ * 
+ * @date 	2014-9-15
+ * @version 1.0
+ */
 public class DetailImageDownloadTask extends BaseGetNewsTask {
 
-	private Context mContext;
-
-	public DetailImageDownloadTask(ResponseListener listener) {
-		super(listener);
-	}
-
 	public DetailImageDownloadTask(Context context, ResponseListener listener) {
-		super(listener);
-		mContext = context;
+		super(context, listener);
 	}
 
 	@Override
 	protected String doInBackground(String... params) {
 
-		// 若传入参数为空，则直接返回
-		if (params.length == 0)
+		String externalCacheDir = SDCardUtils.getExternalCacheDir(mContext);
+		
+		if ( params.length == 0 || TextUtils.isEmpty(externalCacheDir) )
 			return null;
 	
 		File file = null;
 		for (String param : params) {
 			
 			if (TextUtils.isEmpty(param)) {
-				Logger.getLogger().e("NO download, the image url is null");
+				Logger.getLogger().e("no download, the image url is empty");
 				continue;
 			}
 
-			String fileName = MD5Util.encrypt(param);
-			String fileFolder = SDCardUtils.getExternalCacheDir(mContext);
-			File folder = new File(fileFolder);
-			if (!folder.exists()) {
-				folder.mkdirs();
-			}
-
-			String filePath = fileFolder + fileName + ".jpg";
+			String filePath = ZhihuUtils.getCacheImgFilePath(mContext, param);
 			file = new File(filePath);
 			
-			if( !file.exists() || file.length() == 0 ) {
-
+			boolean needDownload = true;
+			
+			if (!file.exists()) {
 				try {
-					
-					file.getParentFile().mkdirs();
 					file.createNewFile();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+			} else {
+				long fileSize = FileUtils.getFileSize(filePath);
 				
-
+				if (fileSize == 0) {
+					// need re download
+				} else {
+					needDownload = false;
+				}
+			}
+			
+			if (needDownload) {
 				InputStream in = null;
 				OutputStream out = null;
-
+				
 				// from web
 				try {
-					in = HttpClientUtils.request(mContext, param, null);
+					in = HttpClientUtils.getStream(mContext, param, null);
 					out = new FileOutputStream(file);
 
 					StreamUtils.copy(in, out);
@@ -83,7 +85,7 @@ public class DetailImageDownloadTask extends BaseGetNewsTask {
 					StreamUtils.close(in);
 				}
 			} else {
-				Logger.getLogger().i("no download, image is exist:" + file.getAbsolutePath());
+				// no need download
 			}
 			
 			publishProgress(param);

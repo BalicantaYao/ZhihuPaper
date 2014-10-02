@@ -8,23 +8,25 @@
 
 因为有大把的时间需要在地铁上度过，而我又喜欢知乎日报中的内容，于是就想自己也开发一个知乎日报的客户端。
 
-经过了一段时间的准备，已经初具规模，实现了以下功能：
+经过了一段时间的准备，已经基本能用，实现了以下功能：
 
 > * 基础框架的搭建
 > * 列表展示当天的最新新闻
 > * 下拉刷新
 > * 正文信息展示
 > * 离线下载
-
-还有以下功能等待实现：
-> * 下拉展示更多新闻
-> * 内容分享至SNS
+> * 正文中图片点击查看大图
 > * 正文中图片保存
 > * 无图模式开发
-> * 已读、未读
+> * 内容分享至SNS
+> * 下拉展示更多新闻
+
+还有以下功能等待实现：
+> * 新闻列表的 已读、未读
 > * 收藏夹
 > * 夜间模式
-> * bug fix
+
+另外，由于时间和精力的关系，有很多适配问题没有解决，并且不可避免的会存在很多BUG，欢迎Fork一个分支出来，和我一同开发。
 
 本程序依赖：
 
@@ -32,18 +34,22 @@
 > * [SmoothProgressBar][4]
 > * [ActionBarSherlock][5]
 > * [ActionBarPullToRefresh][6]
+> * [PhotoView][8]
 
 参考：
 > * [ZhihuDailyPurify][7]
+
+部分资源文件来源于知乎日报的官方客户端，其他图片资源获取自网络。
 
 ## 截图
 
 ![截屏][1]
 ![截屏][2]
 
+
 ## License
 
-    Copyright 2014 cundong
+    Copyright 2014 Cundong
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -64,3 +70,4 @@
 [5]: https://github.com/JakeWharton/ActionBarSherlock
 [6]: https://github.com/chrisbanes/ActionBar-PullToRefresh
 [7]: https://github.com/izzyleung/ZhihuDailyPurify
+[8]: https://github.com/chrisbanes/PhotoView
